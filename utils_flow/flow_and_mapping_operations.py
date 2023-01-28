@@ -195,6 +195,8 @@ def convert_mapping_to_flow(mapping, output_channel_first=True):
         return flow.astype(np.float32)
 
 
+# NOTE this function can only work if both im1 and im2 are the same size
+# see utils_flow.pixel_wise_mapping.warp
 def unormalise_and_convert_mapping_to_flow(map, output_channel_first=True):
 
     if not isinstance(map, np.ndarray):
@@ -288,6 +290,8 @@ def unormalise_and_convert_mapping_to_flow(map, output_channel_first=True):
         return flow.astype(np.float32)
 
 
+# NOTE this function can only work if both im1 and im2 are the same size
+# see utils_flow.pixel_wise_mapping.warp
 def unormalise_flow_or_mapping(map, output_channel_first=True):
 
     if not isinstance(map, np.ndarray):
@@ -354,6 +358,8 @@ def unormalise_flow_or_mapping(map, output_channel_first=True):
         return mapping.astype(np.float32)
 
 
+# NOTE this function can only work if both im1 and im2 are the same size
+# see utils_flow.pixel_wise_mapping.warp
 def unnormalize(tensor, output_channel_first=True):
     if len(tensor.shape) == 4:
         if tensor.shape[1] != 2:
@@ -390,6 +396,8 @@ def unnormalize(tensor, output_channel_first=True):
     return tensor_unnorm
 
 
+# NOTE this function can only work if both im1 and im2 are the same size
+# see utils_flow.pixel_wise_mapping.warp
 def normalize(tensor, output_channel_first=True):
     if len(tensor.shape) == 4:
         if tensor.shape[1] != 2:

@@ -53,6 +53,14 @@ def remap_using_correspondence_map(image, map_x, map_y, interpolation=cv2.INTER_
     return remapped_image
 
 
+# FIXME this function doesn't work if im1 and im2 (aka x) are different sizes: flo has shape [H_t,W_t,xy] with
+# x-range (-W_s,W_s) and y-range (-H_s,H_s) and, as noted in the documentation, maps im2 (aka x) with shape
+# [H_s,W_s] back to im1 with shape [H_t,W_t] (see torch.nn.functional.grid_sample). however, here flo is
+# rescaled to [-1,1] by H_t,W_t, not H_s,W_s as it should be
+# RE this limitation is suggested by the documentation (since it says the shape of x and flo are both H,W),
+# but that should be made explicit and even ensured
+# RE remap_using_flow_fields works as expected because it does not rescale the flow
+# RE RE getting H, W from x.size() (aka im2) does fix this function
 def warp(x, flo, padding_mode='zeros', return_mask=False):
     """
     warp an image/tensor (im2) back to im1, according to the optical flow
@@ -77,6 +85,7 @@ def warp(x, flo, padding_mode='zeros', return_mask=False):
     # makes a mapping out of the flow
 
     # scale grid to [-1,1]
+    #_, _, H, W = x.size()
     vgrid[:, 0, :, :] = 2.0 * vgrid[:, 0, :, :].clone() / max(W - 1, 1) - 1.0
     vgrid[:, 1, :, :] = 2.0 * vgrid[:, 1, :, :].clone() / max(H - 1, 1) - 1.0
 
@@ -94,6 +103,7 @@ def warp(x, flo, padding_mode='zeros', return_mask=False):
     return output
 
 
+# FIXME see warp
 def warp_with_mapping(x, vgrid, padding_mode='zeros', return_mask=False):
     """
     warp an image/tensor (im2) back to im1, according to the mapping (in pixel coordinates)
@@ -108,6 +118,7 @@ def warp_with_mapping(x, vgrid, padding_mode='zeros', return_mask=False):
     # mesh grid
     vgrid = vgrid.clone()
     # scale grid to [-1,1]
+    #_, _, H, W = x.size()
     vgrid[:, 0, :, :] = 2.0 * vgrid[:, 0, :, :].clone() / max(W - 1, 1) - 1.0
     vgrid[:, 1, :, :] = 2.0 * vgrid[:, 1, :, :].clone() / max(H - 1, 1) - 1.0
 
