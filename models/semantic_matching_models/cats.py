@@ -445,7 +445,7 @@ class CATs(nn.Module):
         return source_img.to(self.device), target_img.to(self.device), ratio_x, ratio_y
 
     def estimate_flow(self, source_img, target_img, output_shape=None, scaling=1.0, mode='channel_first',
-                      *args, **kwargs):
+                      return_corr=False, *args, **kwargs):
         """
         Estimates the flow field relating the target to the source image. Returned flow has output_shape if provided,
         otherwise the same dimension than the target image. If scaling is provided, the output shape is the
@@ -491,6 +491,10 @@ class CATs(nn.Module):
 
         if mode != 'channel_first':
             return flow_est.permute(0, 2, 3, 1)
+
+        if return_corr: # bugfix - estimate_flow_and_confidence_map is even calling this method with this flag
+            correlation_from_t_to_s = torch.nn.functional.softmax(correlation_from_t_to_s.view(b, -1, h, w), dim=1)
+            return flow_est, correlation_from_t_to_s
         return flow_est
 
     def estimate_flow_and_confidence_map(self, source_img, target_img, output_shape=None,
