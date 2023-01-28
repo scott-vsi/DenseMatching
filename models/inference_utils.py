@@ -44,7 +44,7 @@ def estimate_mask(mask_type, uncertainty_est, list_item=-1):
 
         # get percentiles for sampling and corresponding subsets
         thresholds = np.percentile(uncert.cpu().numpy(), quants)
-        mask = uncert.le(thresholds).view(b, h, w)
+        mask = uncert.le(thresholds).view(b, h, w) # REVIEW this seems wrong; cf. proba_interval
     elif 'variance_below' in mask_type:
         min_confidence = float(mask_type.split('variance_below_', 1)[-1])
         if 'variance' in list(uncertainty_est.keys()):
