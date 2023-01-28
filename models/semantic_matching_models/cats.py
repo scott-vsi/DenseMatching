@@ -377,6 +377,9 @@ class CATs(nn.Module):
         refined_corr = self.decoder(corr, src_feats, tgt_feats)
 
         if mode == 'flow_prediction' or self.forward_pass_strategy == 'flow_prediction':
+            # these next two blocks (as well as the following two that compute the reverse flow) are equiv. to
+            # c7cea05:utils_flow/correlation_to_matches_utils.py:correlation_to_flow_w_soft_argmax(apply_softmax_=False)
+            # RE this calculation is then repeated in estimate_flow in the softargmax branch (see output['flow_estimates'])
             output_shape = im_target.shape[-2:]
             grid_x_t_to_s, grid_y_t_to_s = self.soft_argmax(refined_corr.view(B, -1, self.feature_size, self.feature_size))
 
