@@ -188,7 +188,7 @@ class UncertaintyPredictionInference(nn.Module):
             return self.estimate_flow_and_confidence_map_direct(source_img, target_img, inference_parameters,
                                                                 output_shape=output_shape, mode=mode)
 
-        elif inference_type == 'homography_from_last_level_uncertainty':
+        elif inference_type == 'homography_from_last_level_uncertainty' or inference_type.lower() == 'h0':
             return self.estimate_flow_and_confidence_map_with_homo(source_img, target_img, inference_parameters,
                                                                    scaling=1.0, output_shape=output_shape, mode=mode)
 
