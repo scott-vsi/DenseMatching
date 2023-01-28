@@ -260,6 +260,8 @@ def estimate_homography_and_correspondence_map(flow_estimated, binary_mask, orig
     H = None
     if len(mkpts1) > min_nbr_points:
         try:
+            # REVIEW try cv2.USAC_MAGSAC. also, if there is an image that fails, I should also try
+            # upping the ransac threshold)
             H, inliers = cv2.findHomography(mkpts0, mkpts1, cv2.RANSAC, ransac_thresh, maxIters=3000)
             H_is_acceptable = homography_is_accepted(H)
             if H_is_acceptable:
