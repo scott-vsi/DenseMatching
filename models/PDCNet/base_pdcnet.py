@@ -553,6 +553,8 @@ class UncertaintyPredictionInference(nn.Module):
 
         pred = {'kp_source': mkpts_s, 'kp_target': mkpts_t, 'confidence_value': confidence_values,
                 'flow': self.resize_and_rescale_flow(flow_estimated, target_img.shape[-2:]),
+                'confidence_map': F.interpolate(input=uncertainty_est['p_r'], size=target_img.shape[-2:], mode='bilinear',
+                                                align_corners=False),
                 'mask': F.interpolate(input=mask.unsqueeze(1).float(), size=target_img.shape[-2:], mode='bilinear',
                                       align_corners=False).squeeze(1)}
         return pred
