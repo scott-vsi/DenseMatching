@@ -481,6 +481,7 @@ class UncertaintyPredictionInference(nn.Module):
         H_final = None
         index_max_inlier = np.argmax(list_inliers)
         max_inlier = list_inliers[index_max_inlier] * 100
+        print(f'preferred scale: {resizing_ratio_list[index_max_inlier]} from {resizing_ratio_list}')
         if max_inlier > min_inlier_threshold:
             # to remove the completely shitty homographies
             H_final = list_H_padded_reso[index_max_inlier]
